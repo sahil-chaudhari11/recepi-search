@@ -96,3 +96,41 @@ searchbtn.addEventListener('click',(e)=>{
 
     fetchRecipes(searchInput);
 });
+
+// #voice search
+
+
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+if (SpeechRecognition) {
+    const recog = new SpeechRecognition();
+    recog.lang = 'en-US';
+    
+    const startButton = document.getElementById('voice-search');
+    const searchBox = document.querySelector('.searchBox');
+
+    if (startButton && searchBox) { 
+        startButton.addEventListener('click', () => {
+            recog.start();
+        });
+
+        recog.onresult = (event) => {
+         let str = event.results[0][0].transcript.slice(0,event.results[0][0].transcript.length-1);
+         searchBox.value=str
+       
+            
+        };
+
+        recog.onerror = (event) => {
+            console.error('Speech recognition error:', event.error);
+        };
+
+        recog.onend = () => {
+            console.log('Speech recognition ended');
+        };
+    } else {
+        console.error('Start button or search input not found');
+    }
+} else {
+    console.log('Speech recognition not supported');
+}
